@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Quiz</title>
+  <style>
+    .quiz-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .answers button {
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Quiz</h1>
+    <div id="question">Question will appear here</div>
+    <div id="answers" class="answers">
+      <!-- Answer buttons will be dynamically added here -->
+    </div>
+    <div id="feedback"></div>
+    <button id="next" onclick="nextQuestion()" style="display: none;">Next Question</button>
+  </div>
+
+  <script>
+    // Questions and answers array
+    const quiz = [
+      { question: "What is 2 + 2?", answers: [3, 4, 5], correct: 4 },
+      { question: "What is the capital of France?", answers: ["Berlin", "Madrid", "Paris"], correct: "Paris" },
+      { question: "What is 5 x 3?", answers: [15, 10, 25], correct: 15 }
+    ];
+
+    let currentQuestion = 0;
+
+    function loadQuestion() {
+      const questionElement = document.getElementById("question");
+      const answersElement = document.getElementById("answers");
+      const feedbackElement = document.getElementById("feedback");
+      const nextButton = document.getElementById("next");
+
+      // Clear feedback and answers
+      feedbackElement.textContent = "";
+      nextButton.style.display = "none";
+      answersElement.innerHTML = "";
+
+      // Load the current question
+      const current = quiz[currentQuestion];
+      questionElement.textContent = current.question;
+
+      // Create buttons for each answer
+      current.answers.forEach((answer) => {
+        const button = document.createElement("button");
+        button.textContent = answer;
+        button.onclick = () => checkAnswer(answer);
+        answersElement.appendChild(button);
+      });
+    }
+
+    function checkAnswer(selected) {
+      const feedbackElement = document.getElementById("feedback");
+      const current = quiz[currentQuestion];
+
+      if (selected === current.correct) {
+        feedbackElement.textContent = "Correct!";
+        document.getElementById("next").style.display = "block";
+      } else {
+        feedbackElement.textContent = "Try again.";
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < quiz.length) {
+        loadQuestion();
+      } else {
+        // End of quiz
+        const quizContainer = document.querySelector(".quiz-container");
+        quizContainer.innerHTML = "<h1>Congratulations!</h1><p>You completed the quiz.</p>";
+      }
+    }
+
+    // Load the first question
+    loadQuestion();
+  </script>
+</body>
+</html>
